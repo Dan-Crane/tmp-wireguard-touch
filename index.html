@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Пакет с пакетами</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .header {
+      font-size: 24px;
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+
+    .button-container {
+      text-align: center;
+    }
+
+    .button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin: 5px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="header">👇 Получить пакеты в пакетах 👇</div>
+
+  <div class="button-container">
+    <button class="button" onclick="startHTTP()">HTTP</button>
+    <button class="button" onclick="startSSE()">SSE (HTTP)</button>
+    <button class="button" onclick="startWebSocket()">WebSocket</button>
+  </div>
+
+  <div class="header">👆Получить пакеты в пакетах 👆</div>
+
+
+  <script>
+    async function startHTTP() {
+      const response = await fetch("http://127.0.0.1:8000/api/http");
+      const data = await response.json();
+      console.log('message:', data);
+    }
+
+    let sseCount = 0;
+    function startSSE() {
+      const subscription = new EventSource('http://127.0.0.1:8000/api/sse');
+
+      subscription.addEventListener('open', (event) => {
+        console.log('opened')
+      });
+
+      subscription.addEventListener('message', (event) => {
+        console.log('message:', event);
+        if (sseCount >= 3) {
+          subscription.close();
+        }
+        sseCount++;
+      });
+
+    }
+
+    let webSocketCount = 0;
+    function startWebSocket() {
+      const socket = new WebSocket('ws://127.0.0.1:8000');
+
+      socket.addEventListener('message', (event) => {
+        console.log('message:', event);
+        if (webSocketCount >= 3) {
+          socket.close();
+        }
+        webSocketCount++;
+      })
+    }
+  </script>
+
+</body>
+
+</html>
