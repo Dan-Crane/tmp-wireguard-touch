@@ -1,7 +1,7 @@
 'use strict';
 
 const fs = require('node:fs');
-const http2 = require('node:http');
+const http2 = require('node:http2');
 const WebSocket = require('ws');
 
 const index = fs.readFileSync('./index.html', 'utf8');
@@ -62,8 +62,8 @@ const key = fs.readFileSync('./cert/key.pem');
 const cert = fs.readFileSync('./cert/cert.pem');
 const options = { key, cert, allowHTTP1: true };
 
-const server = http2.createServer(
-  // options,
+const server = http2.createSecureServer(
+  options,
   (req, res) => {
     const route = routing[req.url];
     if (!route) {
@@ -93,7 +93,7 @@ ws.on('connection', (connection, _) => {
 });
 
 server.listen(8000);
-console.log('Open: http://127.0.0.1:8000');
+console.log('Open: https://127.0.0.1:8000');
 
 let sseCount = 0;
 let webSocketCount = 0;

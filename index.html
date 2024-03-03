@@ -48,14 +48,14 @@
 
   <script>
     async function startHTTP() {
-      const response = await fetch("http://127.0.0.1:8000/api/http");
+      const response = await fetch("https://127.0.0.1:8000/api/http");
       const data = await response.json();
       console.log('message:', data);
     }
 
     let sseCount = 0;
     function startSSE() {
-      const subscription = new EventSource('http://127.0.0.1:8000/api/sse');
+      const subscription = new EventSource('https://127.0.0.1:8000/api/sse');
 
       subscription.addEventListener('open', (event) => {
         console.log('opened')
@@ -73,7 +73,7 @@
 
     let webSocketCount = 0;
     function startWebSocket() {
-      const socket = new WebSocket('ws://127.0.0.1:8000');
+      const socket = new WebSocket('wss://127.0.0.1:8000');
 
       socket.addEventListener('message', (event) => {
         console.log('message:', event);
